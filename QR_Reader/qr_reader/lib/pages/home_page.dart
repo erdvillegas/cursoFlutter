@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_reader/models/scan_model.dart';
 import 'package:qr_reader/pages/mapas_page.dart';
-import 'package:qr_reader/providers/db_provider.dart';
+import 'package:qr_reader/providers/scan_list_provider.dart';
 import 'package:qr_reader/providers/ui_provider.dart';
 import 'package:qr_reader/widgets/custom_navigationbar.dart';
 import 'package:qr_reader/widgets/scan_button.dart';
@@ -14,7 +13,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Historia'), actions: [
-        IconButton(icon: Icon(Icons.delete_forever), onPressed: () {})
+        IconButton(
+            icon: Icon(Icons.delete_forever),
+            onPressed: () {
+              Provider.of<ScanListProvider>(context, listen: false)
+                  .borrarTodos();
+            })
       ]),
       body: _HomePageBody(),
       bottomNavigationBar: CustomNavigationBar(),
@@ -32,19 +36,17 @@ class _HomePageBody extends StatelessWidget {
 
     final currentIndex = uiProvider.selectedMenuOption;
 
-    //TODO: Temporal leer BD
-    DBProvider.db.database;
-
-    final tempScan = new ScanModel(valor: 'http://localhost');
-    // final intTemp = DBProvider.db.nuevoScan(tempScan);
-    // print(intTemp);
-    DBProvider.db.getScanById(1).then((value) => print(value));
+    // Usar el ScanListProvider
+    final scanListProvider =
+        Provider.of<ScanListProvider>(context, listen: false);
 
     switch (currentIndex) {
       case 0:
+        scanListProvider.cargarScansPorTipo('geo');
         return MapasPage();
         break;
       case 1:
+        scanListProvider.cargarScansPorTipo('http');
         return DireccionesPage();
 
       default:
