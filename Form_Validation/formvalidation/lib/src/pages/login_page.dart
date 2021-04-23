@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bloc/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -62,6 +63,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _loginForm(BuildContext context) {
+    final bloc = Provider.of(context);
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -83,10 +85,74 @@ class LoginPage extends StatelessWidget {
             color: Colors.white,
           ),
           child: Column(
-            children: <Widget>[Text('Ingreso', style: TextStyle(fontSize: 20))],
+            children: <Widget>[
+              Text('Ingreso', style: TextStyle(fontSize: 20)),
+              SizedBox(height: 60.0),
+              _crearEmail(bloc),
+              SizedBox(height: 30.0),
+              _crearPassword(bloc),
+              SizedBox(height: 30.0),
+              _crearBotton()
+            ],
           ),
-        )
+        ),
+        Text('¿Olvido la contraseña?'),
+        SizedBox(height: 100.0)
       ]),
     );
+  }
+
+  Widget _crearEmail(LoginBloc bloc) {
+    return StreamBuilder(
+        stream: bloc.emailStream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                    icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
+                    hintText: 'ejemplo@ejemplo.com',
+                    labelText: 'Correo Electrónico',
+                    counterText: snapshot.data),
+                onChanged: bloc.changeEmail,
+              ));
+        });
+  }
+
+  Widget _crearPassword(LoginBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.passwordStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextField(
+              obscureText: true,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                  icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
+                  labelText: 'Contraseña'),
+              onChanged: bloc.changePassword,
+            ));
+      },
+    );
+  }
+
+  Widget _crearBotton() {
+    return RaisedButton(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 80.0),
+          child: Text('Ingresar'),
+        ),
+        // style: ButtonStyle(
+        //     backgroundColor:
+        //         MaterialStateProperty.all<Color>(Colors.deepPurple)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        elevation: 0.0,
+        color: Colors.deepPurple,
+        textColor: Colors.white,
+        onPressed: () => {});
   }
 }
