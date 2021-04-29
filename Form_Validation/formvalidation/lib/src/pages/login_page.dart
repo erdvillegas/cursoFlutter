@@ -92,7 +92,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 30.0),
               _crearPassword(bloc),
               SizedBox(height: 30.0),
-              _crearBotton()
+              _crearBotton(bloc)
             ],
           ),
         ),
@@ -141,21 +141,40 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _crearBotton() {
-    return RaisedButton(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 80.0),
-          child: Text('Ingresar'),
-        ),
-        // style: ButtonStyle(
-        //     backgroundColor:
-        //         MaterialStateProperty.all<Color>(Colors.deepPurple)),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        elevation: 0.0,
-        color: Colors.deepPurple,
-        textColor: Colors.white,
-        onPressed: () => {});
+  Widget _crearBotton(LoginBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.formValidStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          child: RaisedButton(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 80.0),
+                child: Text('Ingresar'),
+              ),
+              // style: ButtonStyle(
+              //     backgroundColor:
+              //         MaterialStateProperty.all<Color>(Colors.deepPurple)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              elevation: 0.0,
+              color: Colors.deepPurple,
+              textColor: Colors.white,
+              onPressed: snapshot.hasData
+                  ? () {
+                      _login(bloc, context);
+                    }
+                  : null),
+        );
+      },
+    );
+  }
+
+  _login(LoginBloc bloc, BuildContext context) {
+    print('================================');
+    print('Email: ${bloc.email}');
+    print('Password: ${bloc.password}');
+    print('================================');
+    Navigator.pushReplacementNamed(context, 'home');
   }
 }
