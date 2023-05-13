@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas_v2/widgets/casting_carts.dart';
 
 class DetailsScreen extends StatelessWidget {
   @override
@@ -11,7 +12,13 @@ class DetailsScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           _CustomAppBar(),
-          SliverList(delegate: SliverChildListDelegate([_PosterAndTitle()]))
+          SliverList(
+              delegate: SliverChildListDelegate([
+            _PosterAndTitle(),
+            _Overview(),
+            _Overview(),
+            CastingCards()
+          ]))
         ],
       ),
     );
@@ -34,6 +41,7 @@ class _CustomAppBar extends StatelessWidget {
         title: Container(
           width: double.infinity,
           alignment: Alignment.bottomCenter,
+          padding: EdgeInsets.only(bottom: 10),
           color: Colors.black12,
           child: Text(
             'movie.title',
@@ -77,19 +85,35 @@ class _PosterAndTitle extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2),
               Text('movie.originalTitle',
-                  style: textTheme.headline5,
+                  style: textTheme.headlineSmall,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2),
               Row(
                 children: [
                   Icon(Icons.star_outline, size: 15, color: Colors.grey),
                   SizedBox(width: 5),
-                  Text('movie.voteAerage', style: textTheme.caption)
+                  Text('movie.voteAerage', style: textTheme.bodySmall)
                 ],
               )
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class _Overview extends StatelessWidget {
+  const _Overview({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Text(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed orci ante. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi ac semper neque, vel auctor turpis. Suspendisse eu orci vel massa lacinia luctus. Sed vel rutrum enim. Cras sagittis dictum consectetur. Nam quis dolor quis lectus laoreet consectetur. Integer pellentesque sagittis est, sed consectetur urna aliquam facilisis.',
+        textAlign: TextAlign.justify,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }
